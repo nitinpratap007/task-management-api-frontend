@@ -1,6 +1,6 @@
 # Task Management Frontend
 
-A React frontend for the Task Management REST API (WA-2), built with Vite and React Router.
+A React frontend for the Task Management REST API, built with Vite and React Router.
 
 ## Tech Stack
 
@@ -14,7 +14,7 @@ A React frontend for the Task Management REST API (WA-2), built with Vite and Re
 
 - Node.js v18 or higher
 - npm
-- WA-2 backend running on http://localhost:3000
+- WA-2 backend running on http://localhost:3000 (or deployed URL)
 
 ## Installation
 
@@ -30,7 +30,7 @@ npm install
 copy .env.example .env   # Windows
 # cp .env.example .env   # macOS/Linux
 
-# 4. Edit .env if needed (default: http://localhost:3000)
+# 4. Edit .env if needed
 ```
 
 ## Environment Setup
@@ -38,7 +38,11 @@ copy .env.example .env   # Windows
 Create `.env` in the project root:
 
 ```env
+# Local development
 VITE_API_URL=http://localhost:3000
+
+# Production (set in Vercel dashboard)
+# VITE_API_URL=https://your-backend.onrender.com
 ```
 
 ## Running Locally
@@ -120,6 +124,42 @@ task-management-frontend/
 npm run build
 npm run preview
 ```
+
+## Deploy to Vercel
+
+### Step 1: Create Vercel Account
+1. Go to https://vercel.com
+2. Sign up (GitHub login recommended)
+
+### Step 2: Import Project
+1. Dashboard → **Add New** → **Project**
+2. Import your GitHub repo: `task-management-frontend`
+3. Configure:
+   - **Framework Preset:** Vite
+   - **Build Command:** `npm run build`
+   - **Output Directory:** `dist`
+
+### Step 3: Set Environment Variables
+In Vercel dashboard → Settings → Environment Variables:
+| Key | Value |
+|-----|-------|
+| `VITE_API_URL` | Your deployed backend URL (e.g., `https://task-management-api.onrender.com`) |
+
+### Step 4: Deploy
+Click **Deploy**. Vercel will build and deploy.
+
+Your frontend URL will be: `https://task-management-frontend.vercel.app`
+
+### Step 5: SPA Routing (Important!)
+For React Router to work on Vercel, create `vercel.json` in the project root:
+
+```json
+{
+  "rewrites": [{ "source": "/(.*)", "destination": "/index.html" }]
+}
+```
+
+Commit and push this file, then redeploy.
 
 ## Known Limitations
 
