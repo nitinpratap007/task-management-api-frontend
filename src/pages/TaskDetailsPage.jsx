@@ -86,6 +86,16 @@ function TaskDetailsPage() {
           <strong>Last Updated:</strong>
           <span>{task.updatedAt}</span>
         </div>
+
+        {task.dueDate && (
+          <div className="detail-row">
+            <strong>Due Date:</strong>
+            <span className={new Date(task.dueDate) < new Date() ? 'status-pending' : 'status-done'}>
+              {new Date(task.dueDate).toLocaleString()}
+              {task.reminderSent && ' (Reminder sent)'}
+            </span>
+          </div>
+        )}
       </div>
 
       <div className="task-actions">

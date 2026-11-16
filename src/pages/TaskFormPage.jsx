@@ -12,6 +12,7 @@ function TaskFormPage() {
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [completed, setCompleted] = useState(false);
+  const [dueDate, setDueDate] = useState('');
   const [loading, setLoading] = useState(false);
   const [fetching, setFetching] = useState(isEditMode);
   const [error, setError] = useState(null);
@@ -31,6 +32,7 @@ function TaskFormPage() {
       setTitle(task.title);
       setDescription(task.description || '');
       setCompleted(task.completed);
+      setDueDate(task.dueDate ? new Date(task.dueDate).toISOString().slice(0, 16) : '');
     } catch (err) {
       if (err.status === 401) {
         localStorage.removeItem('token');
@@ -73,9 +75,10 @@ function TaskFormPage() {
           title: title.trim(),
           description: description.trim(),
           completed,
+          dueDate: dueDate ? new Date(dueDate).toISOString() : null,
         });
       } else {
-        await createTask(title.trim(), description.trim(), completed);
+        await createTask(title.trim(), description.trim(), completed, dueDate ? new Date(dueDate).toISOString() : null);
       }
       navigate('/tasks');
     } catch (err) {
@@ -140,6 +143,20 @@ function TaskFormPage() {
           {fieldErrors.description && (
             <span className="field-error">{fieldErrors.description}</span>
           )}
+        </div>
+
+        <div className="form-group">
+          <label htmlFor="dueDate">Due Date & Reminder (optional)</label>
+          <input
+            id="dueDate"
+            type="datetime-local"
+            value={dueDate}
+            onChange={(e) => setDueDate(e.target.value)}
+            disabled={loading}
+          />
+          <small style={{ color: '#666', fontSize: '0.85rem' }}>
+            Set a due date to receive an email reminder when it's time
+          </small>
         </div>
 
         <div className="form-group checkbox-group">

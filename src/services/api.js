@@ -48,6 +48,50 @@ export async function login(email, password) {
   return handleResponse(response);
 }
 
+export async function verifyEmail(token) {
+  const response = await fetch(`${API_URL}/api/auth/verify-email`, {
+    method: 'POST',
+    headers: getHeaders(),
+    body: JSON.stringify({ token }),
+  });
+  return handleResponse(response);
+}
+
+export async function resendVerification(email) {
+  const response = await fetch(`${API_URL}/api/auth/resend-verification`, {
+    method: 'POST',
+    headers: getHeaders(),
+    body: JSON.stringify({ email }),
+  });
+  return handleResponse(response);
+}
+
+export async function forgotPassword(email) {
+  const response = await fetch(`${API_URL}/api/auth/forgot-password`, {
+    method: 'POST',
+    headers: getHeaders(),
+    body: JSON.stringify({ email }),
+  });
+  return handleResponse(response);
+}
+
+export async function resetPassword(token, newPassword) {
+  const response = await fetch(`${API_URL}/api/auth/reset-password`, {
+    method: 'POST',
+    headers: getHeaders(),
+    body: JSON.stringify({ token, newPassword }),
+  });
+  return handleResponse(response);
+}
+
+export async function getMe() {
+  const response = await fetch(`${API_URL}/api/auth/me`, {
+    method: 'GET',
+    headers: getHeaders(true),
+  });
+  return handleResponse(response);
+}
+
 export async function getTasks() {
   const response = await fetch(`${API_URL}/api/tasks`, {
     method: 'GET',
@@ -64,11 +108,11 @@ export async function getTask(id) {
   return handleResponse(response);
 }
 
-export async function createTask(title, description, completed) {
+export async function createTask(title, description, completed, dueDate) {
   const response = await fetch(`${API_URL}/api/tasks`, {
     method: 'POST',
     headers: getHeaders(true),
-    body: JSON.stringify({ title, description, completed }),
+    body: JSON.stringify({ title, description, completed, dueDate }),
   });
   return handleResponse(response);
 }

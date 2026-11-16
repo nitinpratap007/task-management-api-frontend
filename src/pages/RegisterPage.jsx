@@ -31,9 +31,11 @@ function RegisterPage() {
 
     try {
       const data = await register(name, email, password);
-      localStorage.setItem('token', data.data.token);
-      localStorage.setItem('user', JSON.stringify(data.data.user));
-      navigate('/tasks');
+      // WA-5: No token returned — account is unverified
+      // User must verify email before logging in
+      navigate('/login', {
+        state: { message: 'Registration successful! Please check your email to verify your account before logging in.' }
+      });
     } catch (err) {
       if (err.data && err.data.errors) {
         const errors = {};

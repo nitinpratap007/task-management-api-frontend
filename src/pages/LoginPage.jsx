@@ -1,5 +1,5 @@
-import { useState } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
+import { useState, useEffect } from 'react';
+import { useNavigate, Link, useLocation } from 'react-router-dom';
 import { login } from '../services/api';
 
 function LoginPage() {
@@ -7,7 +7,15 @@ function LoginPage() {
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  const [info, setInfo] = useState(null);
   const navigate = useNavigate();
+  const location = useLocation();
+
+  useEffect(() => {
+    if (location.state?.message) {
+      setInfo(location.state.message);
+    }
+  }, [location.state]);
 
   async function handleSubmit(e) {
     e.preventDefault();
@@ -20,7 +28,11 @@ function LoginPage() {
       localStorage.setItem('user', JSON.stringify(data.data.user));
       navigate('/tasks');
     } catch (err) {
-      setError(err.message || 'Login failed');
+      if (err.status === 403) {
+        setError('Please verify your email before logging in. Check your inbox for the verification link.');
+      } else {
+        setError(err.message || 'Login failed');
+      }
     } finally {
       setLoading(false);
     }
@@ -29,6 +41,7 @@ function LoginPage() {
   return (
     <div className="auth-page">
       <h1>Login</h1>
+      {info && <div className="info-container"><p className="info-text">ℹ️ {info}</p></div>}
       {error && <div className="error-container"><p className="error-text">⚠️ {error}</p></div>}
 
       <form onSubmit={handleSubmit}>
@@ -65,6 +78,9 @@ function LoginPage() {
 
       <p className="auth-link">
         Don't have an account? <Link to="/register">Register here</Link>
+      </p>
+      <p className="auth-link">
+        <Link to="/forgot-password">Forgot password?</Link>
       </p>
     </div>
   );
